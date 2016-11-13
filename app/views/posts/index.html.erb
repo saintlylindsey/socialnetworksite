@@ -1,0 +1,56 @@
+<h2> Welcome to this Social Networking Website </h2>
+
+<h4> My Account </h4>
+
+<% if user_signed_in? %>
+  Logged in as <strong><%= current_user.email %></strong>.
+  <p><%= link_to 'Edit login details', edit_user_registration_path, :class => 'navbar-link' %>
+  <%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %></p>
+<% else %>
+  <%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link'  %> |
+  <%= link_to "Login", new_user_session_path, :class => 'navbar-link'  %>
+<% end %>
+
+<p></p>
+
+<%= link_to 'Your Posts', myposts_path %>
+
+<h4> About this site </h4>
+
+<%= link_to 'Dashboard', dashboards_path %>
+
+<p></p>
+
+<h4> All posts </h4>
+
+<% @posts.each do |p| %>
+	<%=p.id %>
+	<%=p.title %>
+	<%=p.created_at %>
+	<%=link_to "Show", post_path(p) %>
+	<%=link_to "Edit", edit_post_path(p) if current_user==p.user %>
+	<%=link_to_if((current_user==p.user), "Delete", post_path(p), :method=>:delete) {""}%>
+
+	</p>
+	<p></p>	
+<% end %>
+
+<p></p>
+
+<%= paginate @posts %>
+
+<p> Sort by:  
+<%= link_to 'Title', posts_path(:order => "title") %>
+<%= link_to 'Recently commented', posts_path(:order => "comment_time") %>
+<%= link_to 'Recently created', posts_path(:order => "created_at") %></p>
+
+<p> Filter posts by category: </p>
+
+<% Cat.all.each do |c| %>
+	<%= link_to c.name, posts_path(:cat=>c.name) %>
+<% end %>
+
+<h4> Create new post </h4>
+<p><%= link_to "New post", new_post_path %></p>
+
+
